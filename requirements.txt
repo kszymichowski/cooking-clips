@@ -1,8 +1,10 @@
+fastapi
+pydantic
 pytest
 sqlalchemy
-fastapi
-bcrypt
-passlib
 python-jose
 python-multipart
+bcrypt
+passlib
+httpx
 uvicorn

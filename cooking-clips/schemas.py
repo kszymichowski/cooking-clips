@@ -61,8 +61,6 @@ class Recipe(RecipeBase):
 
 class BookBase(BaseModel):
     title: str
-    author: str
-    isbn: str
 
 class BookCreate(BookBase):
     pass

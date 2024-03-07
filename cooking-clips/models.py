@@ -8,6 +8,7 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, index=True)
     email = Column(String, unique=True, index=True)
+    password = Column(String)
 
     owned_books = relationship("Ownership", back_populates="owner")
     followed_books = relationship("Follow", back_populates="follower")
@@ -18,8 +19,7 @@ class Book(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True)
-    author = Column(String)
-    isbn = Column(String, unique=True, index=True)
+    
     recipes = relationship("Recipe", back_populates="book")
 
 class Recipe(Base):
