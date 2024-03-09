@@ -4,6 +4,7 @@ from typing import List, Optional
 class UserBase(BaseModel):
     username: str
     email: str
+    password: str
 
 class UserCreate(UserBase):
     pass
@@ -95,3 +96,4 @@ class UserAuthenticateResponse(BaseModel):
 
 class TokenData(BaseModel):
     username: str = None
+    id: str = None
