@@ -11,7 +11,7 @@ router = APIRouter(
     dependencies=[Depends(get_current_user)],
 )
 
-@router.post("/", response_model=schemas.Book)
+@router.post("/", response_model=schemas.Book, status_code=status.HTTP_201_CREATED)
 def create_book(book: schemas.BookCreate, db: Session = Depends(get_db), current_user: schemas.TokenData = Depends(get_current_user)):
     db_book = models.Book(**book.model_dump())
     db.add(db_book)

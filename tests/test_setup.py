@@ -40,6 +40,22 @@ def db_session():
     TestingSessionLocal().close()
     clear_mappers()
 
+@pytest.fixture(scope='session')
+def auth_token(db_session):
+    response = client.post("/users/", 
+                           json={"username": "set_up_user",
+                                "password": "set_up_user",
+                                "email": "set_up_user@gmail.com"
+                            }
+                        )
+    response = client.post("/login/", 
+                           data={"username": "set_up_user",
+                                "password": "set_up_user"
+                            }
+                        )
+    token = response.json().get('access_token')
+    yield token
+
 client = TestClient(app)
 
 

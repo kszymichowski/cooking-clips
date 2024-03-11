@@ -12,7 +12,29 @@ router = APIRouter(
     tags=["recipes"],
 )
 
-@router.post("/", response_model=schemas.Recipe)
+async def handle_file_upload(file: UploadFile):
+    file_storage_service: Type[FileStorage] = LocalFileStorage()
+    upload_path = Path(__file__).resolve().parent.parent.parent / "local_storage"
+
+
+    file_bytes = await file.read()
+    file_path = upload_path / file.filename
+    file_storage_service.upload_file(file_path=file_path, file=file_bytes)
+    return file_path
+
+async def save_video(file: UploadFile, recipe_id: int, db: Session):
+    file_path = await handle_file_upload(file)
+
+    db_video = models.Video(
+       url=str(file_path),
+       recipe_id=recipe_id
+    )
+    db.add(db_video)
+    db.commit()
+    db.refresh(db_video)
+
+
+@router.post("/", response_model=schemas.Recipe, status_code=status.HTTP_201_CREATED)
 async def create_recipe(
     name: str = Form(...),
     ingredients: str = Form(...),
@@ -52,22 +74,14 @@ async def create_recipe(
     db.commit()
     db.refresh(db_recipe)
 
-    # download video and put on local storage
-    file_storage_service: Type[FileStorage] = LocalFileStorage()
-    upload_path = Path(__file__).resolve().parent.parent.parent / "local_storage"
+    await save_video(file, db_recipe.id, db)
 
+    return db_recipe
 
-    file_bytes = await file.read()
-    file_path = upload_path / file.filename
-    file_storage_service.upload_file(file_path=file_path, file=file_bytes)
-
-    db_video = models.Video(
-       url=file_path,
-       recipe_id=db_recipe.id 
-    )
-    db.add(db_video)
-    db.commit()
-    db.refresh(db_video)
-
-
+@router.get("/{recipe_id}", response_model=schemas.Recipe)
+def get_recipes(recipe_id: int, db: Session = Depends(get_db), current_user: schemas.TokenData = Depends(get_current_user)):
+    db_recipe = db.query(models.Recipe).filter(models.Recipe.id == recipe_id).first()
+    if not db_recipe:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="recipe not found")
+    
     return db_recipe

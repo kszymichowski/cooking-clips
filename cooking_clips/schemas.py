@@ -45,6 +45,19 @@ class Follow(FollowBase):
     class Config:
         from_attributes = True
 
+class VideoBase(BaseModel):
+    url: str
+
+class VideoCreate(VideoBase):
+    pass
+
+class Video(VideoBase):
+    id: int
+    recipe_id: int
+
+    class Config:
+        from_attributes = True
+
 class RecipeBase(BaseModel):
     name: str
     ingredients: str
@@ -56,6 +69,7 @@ class RecipeCreate(RecipeBase):
 
 class Recipe(RecipeBase):
     id: int
+    video: Optional[Video]
 
     class Config:
         from_attributes = True
@@ -73,18 +87,6 @@ class Book(BookBase):
     class Config:
         from_attributes = True
 
-class VideoBase(BaseModel):
-    url: str
-
-class VideoCreate(VideoBase):
-    pass
-
-class Video(VideoBase):
-    id: int
-    recipe_id: int
-
-    class Config:
-        from_attributes = True
 
 class UserAuthenticate(BaseModel):
     username: str
