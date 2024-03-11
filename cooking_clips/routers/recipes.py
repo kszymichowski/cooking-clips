@@ -64,5 +64,13 @@ async def create_recipe(
     print(file_path)
     file_storage_service.upload_file(file_path=file_path, file=file_bytes)
 
+    db_video = models.Video(
+       url=file_path,
+       recipe_id=db_recipe.id 
+    )
+    db.add(db_video)
+    db.commit()
+    db.refresh(db_video)
+
 
     return db_recipe
