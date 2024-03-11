@@ -12,7 +12,7 @@ router = APIRouter(
 )
 
 @router.post("/", response_model=schemas.Follow)
-def create_follow(follow: schemas.FollowCreate, db: Session = Depends(get_db), current_user: schemas.TokenData = Depends()):
+def create_follow(follow: schemas.FollowCreate, db: Session = Depends(get_db), current_user: schemas.TokenData = Depends(get_current_user)):
     db_follow = models.Follow(**follow.model_dump())
     db.add(db_follow)
     db.commit()

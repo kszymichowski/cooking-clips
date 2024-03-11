@@ -11,8 +11,8 @@ router = APIRouter(
     dependencies=[Depends(get_current_user)],
 )
 
-@router.post("/", response_model=schemas.Book)
-def create_book(book: schemas.BookCreate, db: Session = Depends(get_db), current_user: schemas.TokenData = Depends()):
+@router.post("/", response_model=schemas.Book, status_code=status.HTTP_201_CREATED)
+def create_book(book: schemas.BookCreate, db: Session = Depends(get_db), current_user: schemas.TokenData = Depends(get_current_user)):
     db_book = models.Book(**book.model_dump())
     db.add(db_book)
     db.commit()
@@ -28,14 +28,14 @@ def create_book(book: schemas.BookCreate, db: Session = Depends(get_db), current
 
     return db_book
 
-@router.get("{book_id}/", response_model=schemas.Book)
-def get_book(book_id: int, db: Session = Depends(get_db), current_user: schemas.TokenData = Depends()):
+@router.get("/{book_id}", response_model=schemas.Book)
+def get_book(book_id: int, db: Session = Depends(get_db), current_user: schemas.TokenData = Depends(get_current_user)):
     db_book = db.query(models.Book).filter(models.Book.id == book_id).first()
     if db_book is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not found")
     return db_book
 
-@router.get("{user_id}/follows")
+@router.get("/{user_id}/follows")
 def get_followed_books_by_user_id(user_id: int, db: Session = Depends(get_db)):
     db_followed = db.query(models.Follow).filter(models.Follow.user_id == user_id).all()
     if db_followed is None:
@@ -44,7 +44,7 @@ def get_followed_books_by_user_id(user_id: int, db: Session = Depends(get_db)):
     db_books = [follows.book for follows in db_followed]
     return db_books    
 
-@router.get("{user_id}/owned")
+@router.get("/{user_id}/owned")
 def get_owned_books_by_user_id(user_id: int, db: Session = Depends(get_db)):
     db_owned = db.query(models.Ownership).filter(models.Ownership.user_id == user_id).all()
     if db_owned is None:
