@@ -41,7 +41,6 @@ async def create_recipe(
 
     if not is_owner and (not is_follower or not is_follower.can_edit):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="user cannot add recipe: not an owner ors no edit rights")
-    print("here 1")
 
     db_recipe = models.Recipe(
         name=recipe_data.name,
@@ -52,7 +51,6 @@ async def create_recipe(
     db.add(db_recipe)
     db.commit()
     db.refresh(db_recipe)
-    print("here")
 
     # download video and put on local storage
     file_storage_service: Type[FileStorage] = LocalFileStorage()
@@ -61,7 +59,6 @@ async def create_recipe(
 
     file_bytes = await file.read()
     file_path = upload_path / file.filename
-    print(file_path)
     file_storage_service.upload_file(file_path=file_path, file=file_bytes)
 
     db_video = models.Video(
