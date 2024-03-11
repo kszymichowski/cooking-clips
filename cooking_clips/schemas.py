@@ -15,7 +15,7 @@ class User(UserBase):
     followed_books: List["Follow"] = []
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class OwnershipBase(BaseModel):
     user_id: int
@@ -29,7 +29,7 @@ class Ownership(OwnershipBase):
     owner: User
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class FollowBase(BaseModel):
     user_id: int
@@ -43,13 +43,13 @@ class Follow(FollowBase):
     follower: User
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class RecipeBase(BaseModel):
     name: str
     ingredients: str
     instructions: str
-    book_id: str
+    book_id: int
 
 class RecipeCreate(RecipeBase):
     pass
@@ -58,7 +58,7 @@ class Recipe(RecipeBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class BookBase(BaseModel):
     title: str
@@ -71,7 +71,7 @@ class Book(BookBase):
     recipes: List[Recipe] = []
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class VideoBase(BaseModel):
     url: str
@@ -84,7 +84,7 @@ class Video(VideoBase):
     recipe_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class UserAuthenticate(BaseModel):
     username: str
@@ -96,4 +96,4 @@ class UserAuthenticateResponse(BaseModel):
 
 class TokenData(BaseModel):
     username: str = None
-    id: str = None
+    id: int = None
