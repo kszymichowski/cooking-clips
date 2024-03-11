@@ -1,4 +1,4 @@
-from fastapi import HTTPException, Depends, APIRouter
+from fastapi import HTTPException, Depends, APIRouter, status
 from sqlalchemy.orm import Session
 from .. import schemas, models
 from ..database import get_db
@@ -32,14 +32,14 @@ def create_book(book: schemas.BookCreate, db: Session = Depends(get_db), current
 def get_book(book_id: int, db: Session = Depends(get_db), current_user: schemas.TokenData = Depends()):
     db_book = db.query(models.Book).filter(models.Book.id == book_id).first()
     if db_book is None:
-        raise HTTPException(status_code=404, detail="Book not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not found")
     return db_book
 
 @router.get("{user_id}/follows")
 def get_followed_books_by_user_id(user_id: int, db: Session = Depends(get_db)):
     db_followed = db.query(models.Follow).filter(models.Follow.user_id == user_id).all()
     if db_followed is None:
-        raise HTTPException(status_code=404, detail="Followed books or user not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Followed books or user not found")
     
     db_books = [follows.book for follows in db_followed]
     return db_books    
@@ -48,7 +48,7 @@ def get_followed_books_by_user_id(user_id: int, db: Session = Depends(get_db)):
 def get_owned_books_by_user_id(user_id: int, db: Session = Depends(get_db)):
     db_owned = db.query(models.Ownership).filter(models.Ownership.user_id == user_id).all()
     if db_owned is None:
-        raise HTTPException(status_code=404, detail="Owned books or user not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Owned books or user not found")
     
     # should i query this way or just take books from onwer relation
     #db_books = db.query(models.Book).filter(models.Book.id in db_owned[0].book_id)

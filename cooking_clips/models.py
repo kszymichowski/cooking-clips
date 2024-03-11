@@ -21,7 +21,7 @@ class Book(Base):
     title = Column(String, index=True)
 
     recipes = relationship("Recipe", back_populates="book")
-    ownerships = relationship("Ownership", back_populates="book")
+    ownership = relationship("Ownership", uselist=False, back_populates="book")
     follows = relationship("Follow", back_populates="book")
 
 class Recipe(Base):
@@ -54,7 +54,7 @@ class Ownership(Base):
     book_id = Column(Integer, ForeignKey("books.id"))
 
     owner = relationship("User", back_populates="owned_books")
-    book = relationship("Book", back_populates="ownerships")
+    book = relationship("Book", back_populates="ownership")
 
 
 class Follow(Base):

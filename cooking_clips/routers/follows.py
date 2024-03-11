@@ -12,8 +12,8 @@ router = APIRouter(
 )
 
 @router.post("/", response_model=schemas.Follow)
-def create_book(book: schemas.FollowCreate, db: Session = Depends(get_db), current_user: schemas.TokenData = Depends()):
-    db_follow = models.Follow(**book.model_dump())
+def create_follow(follow: schemas.FollowCreate, db: Session = Depends(get_db), current_user: schemas.TokenData = Depends()):
+    db_follow = models.Follow(**follow.model_dump())
     db.add(db_follow)
     db.commit()
     db.refresh(db_follow)

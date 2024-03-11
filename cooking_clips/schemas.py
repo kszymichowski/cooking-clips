@@ -49,6 +49,7 @@ class RecipeBase(BaseModel):
     name: str
     ingredients: str
     instructions: str
+    book_id: str
 
 class RecipeCreate(RecipeBase):
     pass
