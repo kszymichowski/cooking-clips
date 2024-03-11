@@ -2,3 +2,6 @@ local_storage/
 .venv/
 credentials.txt
 *.db
+.pytest_chache/
+__pychache__/
+*.pyc
