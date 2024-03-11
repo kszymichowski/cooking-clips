@@ -56,7 +56,6 @@ class RecipeCreate(RecipeBase):
 
 class Recipe(RecipeBase):
     id: int
-    book_id: int
 
     class Config:
         orm_mode = True

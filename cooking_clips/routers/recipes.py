@@ -1,8 +1,11 @@
-from fastapi import HTTPException, Depends, APIRouter, status
+from fastapi import HTTPException, Depends, APIRouter, status, UploadFile, File
 from sqlalchemy.orm import Session
 from .. import schemas, models
 from ..database import get_db
 from ..utils.auth import get_current_user
+from ..file_service.files import FileStorage, LocalFileStorage
+from typing import Type
+from pathlib import Path
 
 router = APIRouter(
     prefix="/recipes",
@@ -11,7 +14,7 @@ router = APIRouter(
 )
 
 @router.post("/", response_model=schemas.Recipe)
-def create_recipe(recipe: schemas.RecipeCreate, db: Session = Depends(get_db), current_user: schemas.TokenData = Depends()):
+def create_recipe(recipe: schemas.RecipeCreate, file: UploadFile = File() , db: Session = Depends(get_db), current_user: schemas.TokenData = Depends()):
 
     is_owner = db.query(models.Ownership).filter(models.Ownership.book_id == recipe.book_id and models.Ownership.user_id == current_user.id).first()
     is_follower = db.query(models.Follow).filter(models.Follow.book_id == recipe.book_id and models.Follow.user_id == current_user.id).first()
@@ -23,5 +26,16 @@ def create_recipe(recipe: schemas.RecipeCreate, db: Session = Depends(get_db), c
     db.add(db_recipe)
     db.commit()
     db.refresh(db_recipe)
+
+    # download video and put on local storage
+    file_storage_service: Type[FileStorage] = LocalFileStorage
+    upload_path = Path(__file__).resolve().parent.parent / "local_storage"
+
+
+    file_bytes = file.read()
+    file_path = upload_path / file.filename
+    print(file_path)
+    file_storage_service.upload_file(file_path, file_bytes)
+
 
     return db_recipe
