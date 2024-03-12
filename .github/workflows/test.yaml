@@ -24,10 +24,10 @@ jobs:
 
     - name: Set up Environment Variables
       run: |
-        export SECRET_KEY="${{ secrets.AUTH_TOKEN_SECRET_KEY }}"
-        export DB_USERNAME="postgres"
-        export DB_PASSWORD="admin"
-        export TEST_DB_NAME="cooking-clips-test"
+        echo "export SECRET_KEY='${{ secrets.AUTH_TOKEN_SECRET_KEY }}'" >> $GITHUB_ENV
+        echo "export DB_USERNAME=postgres" >> $GITHUB_ENV
+        echo "export DB_PASSWORD=admin" >> $GITHUB_ENV
+        echo "export TEST_DB_NAME=cooking-clips-test" >> $GITHUB_ENV
 
     - name: Set up Python
       uses: actions/setup-python@v2
@@ -40,4 +40,6 @@ jobs:
         pip install -r requirements.txt
 
     - name: Run tests
-      run: pytest
+      run: |
+        source $GITHUB_ENV
+        pytest
