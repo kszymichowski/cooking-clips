@@ -9,3 +9,4 @@ passlib
 httpx
 uvicorn
 boto3
+psycopg2
