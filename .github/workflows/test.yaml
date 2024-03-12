@@ -48,4 +48,4 @@ jobs:
     - name: Run tests
       run: |
         source $GITHUB_ENV
-        pytest
+        pytest -v -s
