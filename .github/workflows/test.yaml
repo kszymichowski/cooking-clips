@@ -22,6 +22,11 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v2
 
+    - name: Activate virtual environment
+      run: |
+        python -m venv .venv
+        source .venv/bin/activate
+
     - name: Set up Environment Variables
       run: |
         echo "SECRET_KEY='${{ secrets.AUTH_TOKEN_SECRET_KEY }}'" >> $GITHUB_ENV
