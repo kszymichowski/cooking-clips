@@ -35,11 +35,8 @@ def db_session():
 
     app.dependency_overrides[get_db] = override_get_db
 
-    folder_path = Path(__file__).parent.parent.parent / "local_storage/"
-    
-    # Check if the folder exists
+    folder_path = Path(__file__).parent.parent / "local_storage/"
     if not os.path.exists(folder_path):
-        # If it doesn't exist, create it
         os.makedirs(folder_path)
 
     
