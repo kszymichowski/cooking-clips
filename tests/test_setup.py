@@ -1,4 +1,6 @@
 import pytest
+import os
+from pathlib import Path
 from sqlalchemy import create_engine, StaticPool
 from sqlalchemy.orm import sessionmaker, clear_mappers
 from cooking_clips import models  # replace with your actual models module
@@ -32,6 +34,10 @@ def db_session():
 
 
     app.dependency_overrides[get_db] = override_get_db
+
+    folder_path = Path(__file__).parent.parent / "local_storage/"
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
 
     
     yield TestingSessionLocal()  # this is where the testing happens
