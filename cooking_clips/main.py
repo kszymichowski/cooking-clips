@@ -12,3 +12,7 @@ app.include_router(login.router)
 app.include_router(books.router)
 app.include_router(recipes.router)
 app.include_router(follows.router)
+
+
+# jeśli env = prod to użyc s3Filemanada
+# jesli nie to uzycj locl file mansae 
