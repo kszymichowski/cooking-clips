@@ -1,9 +1,10 @@
+import os
 from fastapi import HTTPException, Depends, APIRouter, status, UploadFile, File, Form
 from sqlalchemy.orm import Session
 from .. import schemas, models
 from ..database import get_db
 from ..utils.auth import get_current_user
-from ..file_service.files import FileStorage, LocalFileStorage
+from ..file_service.files import FileStorage, LocalFileStorage, S3FileStorage
 from typing import Type
 from pathlib import Path
 
@@ -13,9 +14,13 @@ router = APIRouter(
 )
 
 async def handle_file_upload(file: UploadFile):
-    file_storage_service: Type[FileStorage] = LocalFileStorage()
-    upload_path = Path(__file__).resolve().parent.parent.parent / "local_storage"
 
+    if os.getenv('ENV') == 'prod':
+        bucket_name = "your-s3-bucket-name"
+        file_storage_service: Type[FileStorage] = S3FileStorage(bucket_name=bucket_name)
+    else:
+        file_storage_service = LocalFileStorage()
+        upload_path = Path(__file__).resolve().parent.parent.parent / "local_storage"
 
     file_bytes = await file.read()
     file_path = upload_path / file.filename
