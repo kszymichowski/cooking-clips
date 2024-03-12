@@ -35,7 +35,7 @@ jobs:
     - name: Run tests
       env:
         SECRET_KEY: ${{ secrets.AUTH_TOKEN_SECRET_KEY }}
-        DB_USERNAME: "postgres"
-        DB_PASSWORD: "admin"
-        TEST_DB_NAME: "cooking-clips-test"
+        DB_USERNAME: postgres
+        DB_PASSWORD: admin
+        TEST_DB_NAME: cooking-clips-test
       run: pytest
