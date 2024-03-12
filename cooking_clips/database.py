@@ -7,6 +7,7 @@ from sqlalchemy.orm import sessionmaker
 username = os.getenv('DB_USERNAME')
 password = os.getenv('DB_PASSWORD')
 db_name = os.getenv('DB_NAME')
+print(f"nonTEST - postgresql://{username}:{password}@localhost/{db_name}")
 SQLALCHEMY_DATABASE_URL = f"postgresql://{username}:{password}@localhost/{db_name}"
 
 engine = create_engine(
