@@ -1,4 +1,4 @@
-local_storage/
+/local_storage/*
 .venv/
 credentials.txt
 *.db
