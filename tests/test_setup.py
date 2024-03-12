@@ -16,6 +16,7 @@ def db_session():
     username = os.getenv('DB_USERNAME')
     password = os.getenv('DB_PASSWORD')
     test_db_name = os.getenv('TEST_DB_NAME')
+    print(f"postgresql://{username}:{password}@localhost/{test_db_name}")
     SQLALCHEMY_DATABASE_URL = f"postgresql://{username}:{password}@localhost/{test_db_name}"
 
     engine = create_engine(SQLALCHEMY_DATABASE_URL, poolclass=StaticPool)
